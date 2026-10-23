@@ -55,8 +55,8 @@ def coque(etiquette, titre, intro, contenu, couleur=VIOLET):
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 <tr><td align="center" style="{FONT}padding:4px 16px 0;">
 <span style="display:inline-block;background:{PASTILLE};color:{couleur};font-size:11px;font-weight:700;letter-spacing:.5px;padding:6px 14px;border-radius:20px;">{e(etiquette)}</span>
-<div style="font-size:30px;line-height:37px;font-weight:800;color:{INK};margin-top:14px;">{e(titre)}</div>
-<div style="font-size:15px;line-height:23px;color:{BODY};margin-top:10px;">{intro}</div>
+<div style="font-size:30px;line-height:38px;font-weight:800;color:{INK};margin-top:16px;letter-spacing:-0.3px;">{e(titre)}</div>
+<div style="font-size:15px;line-height:24px;color:{BODY};margin:12px auto 0;max-width:460px;">{intro}</div>
 </td></tr>
 {contenu}
 <tr><td align="center" style="{FONT}padding:26px 24px 8px;font-size:11px;line-height:17px;color:{MUTED};">
@@ -66,23 +66,32 @@ aucune donnée n'est inventée, les données absentes sont signalées comme tell
 
 
 def section(num, titre, intro=""):
-    return (f'<tr><td align="center" style="{FONT}padding:34px 16px 14px;">'
-            f'<div style="display:inline-block;width:30px;height:30px;line-height:30px;border-radius:15px;background:{PASTILLE};'
+    """Pastille > titre > chapeau : 48 px au-dessus, 24 px avant le contenu."""
+    return (f'<tr><td align="center" style="{FONT}padding:48px 16px 24px;">'
+            f'<div style="display:inline-block;width:32px;height:32px;line-height:32px;border-radius:16px;background:{PASTILLE};'
             f'color:{INK};font-size:13px;font-weight:700;text-align:center;">{num}</div>'
-            f'<div style="font-size:24px;line-height:30px;font-weight:800;color:{INK};margin-top:10px;">{e(titre)}</div>'
-            + (f'<div style="font-size:14px;line-height:21px;color:{BODY};margin-top:6px;">{intro}</div>' if intro else "")
+            f'<div style="font-size:22px;line-height:28px;font-weight:800;color:{INK};margin-top:12px;">{e(titre)}</div>'
+            + (f'<div style="font-size:14px;line-height:22px;color:{BODY};margin:8px auto 0;max-width:420px;">{intro}</div>' if intro else "")
             + '</td></tr>')
 
 
-def carte(interieur, fond="#FFFFFF", bord=BORD, pad="18px 20px"):
-    return (f'<tr><td style="padding:0 0 10px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
-            f'style="background:{fond};border:1px solid {bord};border-radius:14px;"><tr><td style="{FONT}padding:{pad};">'
+def carte(interieur, fond="#FFFFFF", bord=BORD, pad="24px"):
+    return (f'<tr><td style="padding:0 0 12px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+            f'style="background:{fond};border:1px solid {bord};border-radius:16px;"><tr><td style="{FONT}padding:{pad};">'
             f'{interieur}</td></tr></table></td></tr>')
 
 
 def numero(i, fond=INK):
-    return (f'<td valign="top" width="34" style="padding-top:2px;"><div style="width:24px;height:24px;line-height:24px;border-radius:12px;'
+    return (f'<td valign="top" width="40" style="padding-top:1px;"><div style="width:24px;height:24px;line-height:24px;border-radius:12px;'
             f'background:{fond};color:#FFFFFF;font-size:12px;font-weight:700;text-align:center;{FONT}">{i}</div></td>')
+
+
+def etiquette(txt):
+    return f'<div style="font-size:11px;line-height:16px;font-weight:700;letter-spacing:.6px;color:{MUTED};">{e(txt)}</div>'
+
+
+def separateur():
+    return f'<div style="height:1px;background:#EEEDF6;margin:16px 0;line-height:1px;font-size:1px;">&nbsp;</div>'
 
 
 def html_veille(st, a, posts, start, end):
@@ -94,47 +103,51 @@ def html_veille(st, a, posts, start, end):
               (f"{T['transcrites']}/{T['videos_transcriptibles']}", "Reels transcrits", INK),
               (st["fiabilite"].capitalize(), "fiabilité", "#1F9D63" if st["fiabilite"] == "élevée" else CORAIL)]
     kpi = "".join(f'<td width="25%" style="padding:0 4px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
-                  f'style="background:#FFFFFF;border:1px solid {BORD};border-radius:14px;"><tr><td align="center" style="{FONT}padding:14px 4px;">'
-                  f'<div style="font-size:22px;font-weight:800;color:{c};">{e(v)}</div>'
-                  f'<div style="font-size:11px;color:{MUTED};margin-top:2px;">{e(l)}</div></td></tr></table></td>' for v, l, c in tuiles)
-    c = f'<tr><td style="padding:22px 0 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>{kpi}</tr></table></td></tr>'
+                  f'style="background:#FFFFFF;border:1px solid {BORD};border-radius:16px;"><tr><td align="center" style="{FONT}padding:16px 4px;">'
+                  f'<div style="font-size:24px;line-height:30px;font-weight:800;color:{c};">{e(v)}</div>'
+                  f'<div style="font-size:11px;line-height:16px;color:{MUTED};margin-top:4px;">{e(l)}</div></td></tr></table></td>' for v, l, c in tuiles)
+    c = f'<tr><td style="padding:32px 0 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>{kpi}</tr></table></td></tr>'
     if st["statut"] == "partielle":
-        lim = "".join(f"<li>{e(r)}</li>" for r in st["raisons"])
-        c += '<tr><td style="padding:14px 0 0;"></td></tr>' + carte(
-            f'<div style="font-size:12px;font-weight:700;color:{CORAIL};">DONNÉES MANQUANTES CETTE SEMAINE</div>'
-            f'<ul style="margin:6px 0 0 18px;padding:0;font-size:13px;line-height:20px;color:{INK};">{lim}</ul>', fond="#FFF5F3", bord=CORAIL)
+        lim = "".join(f'<li style="margin-bottom:4px;">{e(r)}</li>' for r in st["raisons"])
+        c += '<tr><td style="padding:16px 0 0;"></td></tr>' + carte(
+            f'<div style="font-size:11px;font-weight:700;letter-spacing:.6px;color:{CORAIL};">DONNÉES MANQUANTES CETTE SEMAINE</div>'
+            f'<ul style="margin:8px 0 0 18px;padding:0;font-size:14px;line-height:22px;color:{INK};">{lim}</ul>', fond="#FFF5F3", bord=CORAIL)
     c += section(1, "En bref", "L'essentiel de la semaine en " + vi("trois phrases") + ".")
-    c += carte(f'<div style="font-size:15px;line-height:24px;color:{INK};">{e(a.get("resume_executif"))}</div>')
+    c += carte(f'<div style="font-size:16px;line-height:26px;color:{INK};">{e(a.get("resume_executif"))}</div>', pad="28px")
     nb = len(a.get("tendances") or [])
     c += section(2, "Grandes tendances", f"Les {vi(f'{nb} sujets')} qui ont structuré la semaine.")
     for i, x in enumerate(a.get("tendances") or [], 1):
-        comptes = " ".join("@" + k.lstrip("@") for k in x.get("comptes") or [])
+        comptes = " &nbsp;·&nbsp; ".join(e("@" + k.lstrip("@")) for k in x.get("comptes") or [])
         c += carte(f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>{numero(i)}<td style="{FONT}">'
-                   f'<div style="font-size:16px;line-height:22px;font-weight:800;color:{INK};">{e(x.get("titre"))}</div>'
-                   f'<div style="font-size:12px;font-weight:700;color:{VIOLET};margin-top:3px;">{e(comptes)}</div>'
-                   f'<div style="font-size:13px;line-height:20px;color:{BODY};margin-top:6px;">{e(x.get("pourquoi"))}</div>'
-                   f'</td></tr></table>', pad="16px 18px")
+                   f'<div style="font-size:17px;line-height:24px;font-weight:800;color:{INK};">{e(x.get("titre"))}</div>'
+                   f'<div style="font-size:12px;line-height:18px;font-weight:700;color:{VIOLET};margin-top:4px;">{comptes}</div>'
+                   f'{separateur()}{etiquette("POURQUOI C’EST IMPORTANT")}'
+                   f'<div style="font-size:14px;line-height:22px;color:{BODY};margin-top:4px;">{e(x.get("pourquoi"))}</div>'
+                   f'</td></tr></table>')
     c += section(3, "Top 5 à consulter", "Les publications les plus " + vi("utiles pour ta veille") + ".")
     for i, x in enumerate(a.get("top5") or [], 1):
         p = known.get(x.get("shortcode"))
         if not p:
             continue
-        chiffres = " · ".join(f"{n(p[k])} {lab}" for k, lab in (("lectures", "lectures"), ("likes", "likes"), ("commentaires", "commentaires"))
-                              if p.get(k) is not None)
+        chiffres = " &nbsp;·&nbsp; ".join(f'<b style="color:{BODY};">{n(p[k])}</b> {lab}'
+                                          for k, lab in (("lectures", "lectures"), ("likes", "likes"), ("commentaires", "commentaires"))
+                                          if p.get(k) is not None)
         c += carte(f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>{numero(i, VIOLET)}<td style="{FONT}">'
-                   f'<div style="font-size:12px;color:{MUTED};"><b style="color:{INK};">@{e(p["compte"])}</b> · {e(p["type"])}</div>'
-                   f'<div style="font-size:14px;line-height:21px;color:{INK};margin:4px 0 6px;">{e(x.get("raison"))}</div>'
-                   f'<div style="font-size:11px;color:{MUTED};margin-bottom:10px;">{e(chiffres)}</div>'
-                   f'<a href="{e(p["url"])}" style="display:inline-block;background:{VIOLET};color:#FFFFFF;text-decoration:none;'
-                   f'font-size:13px;font-weight:700;padding:9px 18px;border-radius:10px;">Voir la publication</a>'
-                   f'</td></tr></table>', pad="16px 18px")
+                   f'<div style="font-size:13px;line-height:18px;color:{MUTED};"><b style="color:{INK};">@{e(p["compte"])}</b> &nbsp;·&nbsp; {e(p["type"])}</div>'
+                   f'<div style="font-size:15px;line-height:23px;color:{INK};margin-top:8px;">{e(x.get("raison"))}</div>'
+                   f'<div style="font-size:12px;line-height:18px;color:{MUTED};margin-top:8px;">{chiffres}</div>'
+                   f'<div style="margin-top:16px;"><a href="{e(p["url"])}" style="display:inline-block;background:{VIOLET};color:#FFFFFF;'
+                   f'text-decoration:none;font-size:13px;line-height:18px;font-weight:700;padding:10px 18px;border-radius:10px;">Voir la publication</a></div>'
+                   f'</td></tr></table>')
     c += section(4, "Recommandation", "Une seule action, " + vi("à mener cette semaine") + ".")
-    c += carte(f'<div style="font-size:17px;line-height:26px;font-weight:800;color:#FFFFFF;text-align:center;">{e(a.get("recommandation"))}</div>',
-               fond=VIOLET, bord=VIOLET, pad="22px 24px")
-    c += (f'<tr><td align="center" style="{FONT}padding:18px 20px 0;font-size:13px;line-height:20px;color:{BODY};">'
+    c += carte(f'<div style="font-size:11px;font-weight:700;letter-spacing:.6px;color:#CFC6FF;text-align:center;">RECOMMANDATION PRIORITAIRE</div>'
+               f'<div style="font-size:18px;line-height:28px;font-weight:800;color:#FFFFFF;text-align:center;margin-top:8px;">{e(a.get("recommandation"))}</div>',
+               fond=VIOLET, bord=VIOLET, pad="32px")
+    c += (f'<tr><td align="center" style="{FONT}padding:24px 24px 0;font-size:14px;line-height:22px;color:{BODY};">'
           f'Le rapport complet est en {vi("pièce jointe (PDF)")} : insights actionnables, outils cités, '
           f'points de vigilance et qualité des données.</td></tr>')
-    titre = f"Semaine du {start.day} {MOIS[start.month - 1]} au {end.day} {MOIS[end.month - 1]} {end.year}"
+    titre = f"Semaine du {start.day} au {end.day} {MOIS[end.month - 1]} {end.year}" if start.month == end.month else \
+        f"Semaine du {start.day} {MOIS[start.month - 1]} au {end.day} {MOIS[end.month - 1]} {end.year}"
     intro = (f"Ta veille sur {nb_comptes} comptes Instagram : {vi(str(T['posts']) + ' publications')} analysées, "
              f"{vi(str(actifs) + ' comptes actifs')} cette semaine.")
     return coque("VEILLE INSTAGRAM HEBDOMADAIRE", titre, intro, c)
