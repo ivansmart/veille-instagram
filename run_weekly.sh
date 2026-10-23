@@ -4,7 +4,8 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 ARGS=("$@")
-pip install -q -r requirements.txt >/dev/null 2>&1 || echo "AVERT: installation des dépendances incomplète" >&2
+python3 -m pip install -q -r requirements.txt 2>&1 | tail -3
+python3 -c "import requests, yaml, reportlab, numpy" || { echo "ERREUR: dépendances Python manquantes après installation" >&2; exit 1; }
 python3 collect.py "${ARGS[@]}"; rc=$?
 [ $rc -eq 0 ] && { python3 transcribe.py "${ARGS[@]}" || echo "AVERT: transcription en échec, mode dégradé (légendes seules)" >&2; }
 python3 status.py "${ARGS[@]}" || exit 1
