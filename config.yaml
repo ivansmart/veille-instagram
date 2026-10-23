@@ -1,0 +1,30 @@
+# Veille Instagram hebdomadaire : configuration
+destinataire: ouedraogoivan@gmail.com
+fuseau: Europe/Paris
+comptes:
+  - le_gouverneur_ia
+  - danyltn
+  - kingarms.ai
+  - madameb0nplan
+  - ledevultime
+  - vincentleserpent
+  - ialan_automatise
+  - aty_pique
+  - zeyneb_madi
+  - frenchstartupper
+apify:
+  actor_posts: apify~instagram-scraper
+  actor_profils: apify~instagram-profile-scraper
+  max_posts_par_compte: 30       # garde-fou de coût
+  max_usd_par_run: 1.00          # plafond dur facturé par Apify
+  timeout_run_s: 900
+  tentatives: 2
+  pause_entre_tentatives_s: 300
+transcription:
+  modele: small
+  duree_max_s: 600
+  taille_max_mo: 200
+seuils:
+  echec_si_comptes_en_erreur_min: 6     # >= 6 comptes en erreur => collecte échouée
+  partiel_si_stats_manquantes_pct: 20   # > 20 % des posts sans likes/commentaires
+  partiel_si_transcription_pct_min: 70  # < 70 % des Reels transcrits
