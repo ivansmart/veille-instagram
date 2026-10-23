@@ -5,7 +5,10 @@ set -uo pipefail
 cd "$(dirname "$0")"
 ARGS=("$@")
 python3 -m pip install -q -r requirements.txt 2>&1 | tail -3
-python3 -c "import requests, yaml, reportlab, numpy" || { echo "ERREUR: dépendances Python manquantes après installation" >&2; exit 1; }
+# Pillow est parfois cassé sur l'image du serveur (constaté le 23/10/2026) : réinstallation forcée si besoin
+python3 -c "from PIL import Image" 2>/dev/null || python3 -m pip install -q --force-reinstall pillow 2>&1 | tail -2
+python3 -c "import requests, yaml, reportlab, numpy; from PIL import Image; from reportlab.platypus import SimpleDocTemplate" \
+  || { echo "ERREUR: dépendances Python manquantes après installation" >&2; exit 1; }
 python3 collect.py "${ARGS[@]}"; rc=$?
 [ $rc -eq 0 ] && { python3 transcribe.py "${ARGS[@]}" || echo "AVERT: transcription en échec, mode dégradé (légendes seules)" >&2; }
 python3 status.py "${ARGS[@]}" || exit 1
